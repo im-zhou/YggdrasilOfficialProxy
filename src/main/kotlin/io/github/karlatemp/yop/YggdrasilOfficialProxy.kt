@@ -116,12 +116,12 @@ object YggdrasilOfficialProxy {
     fun reloadConfiguration() {
         val file = File("YggdrasilOfficialProxy.conf")
         val loader = HoconConfigurationLoader.builder()
-                .file(file)
-                .defaultOptions(
-                        ConfigurationOptions.defaults()
-                                .shouldCopyDefaults(true)
-                )
-                .build()
+            .file(file)
+            .defaultOptions(
+                ConfigurationOptions.defaults()
+                    .shouldCopyDefaults(true)
+            )
+            .build()
         val conf = kotlin.runCatching {
             if (file.isFile)
                 loader.load()
@@ -134,16 +134,18 @@ object YggdrasilOfficialProxy {
             output.println("# YggdrasilOfficialProxy v2.0.0")
             output.println("# #############################")
             output.println("# Oops.")
-            output.println(when {
-                conf == null && file.isFile -> "# Your Configuration of YggdrasilOfficialProxy looks like broken. We will fix it."
-                !edited -> {
-                    output.println(
+            output.println(
+                when {
+                    conf == null && file.isFile -> "# Your Configuration of YggdrasilOfficialProxy looks like broken. We will fix it."
+                    !edited -> {
+                        output.println(
                             "# You look like started YggdrasilOfficialProxy before"
-                    )
-                    "# But you forget edit our configuration."
+                        )
+                        "# But you forget edit our configuration."
+                    }
+                    else -> "# You look like you started YggdrasilOfficialProxy for the first time."
                 }
-                else -> "# You look like you started YggdrasilOfficialProxy for the first time."
-            })
+            )
             output.println("#")
             output.println("# Before System starting.")
             output.println("# You should edit our configuration first!")
@@ -161,9 +163,10 @@ object YggdrasilOfficialProxy {
             val authPassword = node("password").string
             if (!authUsername.isNullOrBlank() && !authPassword.isNullOrBlank()) {
                 Authenticator.setDefault(
-                        object : Authenticator() {
-                            override fun getPasswordAuthentication() = PasswordAuthentication(authUsername, authPassword.toCharArray())
-                        }
+                    object : Authenticator() {
+                        override fun getPasswordAuthentication() =
+                            PasswordAuthentication(authUsername, authPassword.toCharArray())
+                    }
                 )
             }
             return when (node("type").getString("direct")) {
@@ -199,11 +202,11 @@ object YggdrasilOfficialProxy {
         this.port_C = conf.node("server", "port").getInt(port_C)
         authlib = conf.node("authlib-injector").string
         baseAPI = conf.node("api").getString("https://skin.prinzeugen.net/api/yggdrasil")
-                .let {
-                    if (it.endsWith("/"))
-                        it.substring(0, it.length - 1)
-                    else it
-                }
+            .let {
+                if (it.endsWith("/"))
+                    it.substring(0, it.length - 1)
+                else it
+            }
         conf.node("CDN").apply {
             CDN_enable = node("enable").boolean
             CDN_origin_link = node("origin").getString("")
@@ -224,68 +227,68 @@ object YggdrasilOfficialProxy {
         }
         save(createNode().apply {
             node("edited").setCV(
-                    "IMPORTANT: Set this value to `true`!",
-                    false
+                "IMPORTANT: Set this value to `true`!",
+                false
             )
             node("api").setCV(
-                    "The yggdrasil api root",
-                    "https://skin.prinzeugen.net/api/yggdrasil"
+                "The yggdrasil api root",
+                "https://skin.prinzeugen.net/api/yggdrasil"
             )
             node("server").setCV(
-                    "The server binding actions.",
-                    createNode().apply {
-                        node("host").set("0.0.0.0")
-                        node("port").set(32217)
-                    }
+                "The server binding actions.",
+                createNode().apply {
+                    node("host").set("0.0.0.0")
+                    node("port").set(32217)
+                }
             )
             node("official-first").setCV(
-                    "When access multiple apis. Use official api first.",
-                    false
+                "When access multiple apis. Use official api first.",
+                false
             )
             node("authlib-injector").setCV(
-                    "The location of YggdrasilInjector\n" +
-                            "@see https://github.com/yushijinhun/authlib-injector/",
-                    "./authlib-injector-XXXX.jar"
+                "The location of YggdrasilInjector\n" +
+                        "@see https://github.com/yushijinhun/authlib-injector/",
+                "./authlib-injector-XXXX.jar"
             )
             node("proxy").setCV(
-                    "Proxy settings",
-                    createNode().apply {
-                        node("official").setCV(
-                                "The proxy of official connecting",
-                                createNode().apply {
-                                    node("type").set("direct")
-                                }
-                        )
-                        node("just-example-for-socks").setCV(
-                                "Example for socks proxy",
-                                createNode().apply {
-                                    node("type").set("socks")
-                                    node("host").set("localhost")
-                                    node("port").set(1080)
-                                }
-                        )
-                        node("just-example-for-socks-with-authentication").setCV(
-                                "Example for socks proxy with authentication",
-                                createNode().apply {
-                                    node("type").set("socks")
-                                    node("host").set("localhost")
-                                    node("port").set(1080)
-                                    node("username").set("username")
-                                    node("password").set("password")
-                                }
-                        )
-                        node("yggdrasil").setCV(
-                                "The proxy of yggdrasil connecting",
-                                createNode().apply {
-                                    node("type").set("direct")
-                                }
-                        )
-                        node("just-example-for-http").set(createNode().apply {
-                            node("type").set("http")
-                            node("url").set("http://localhost/proxy")
-                        })
+                "Proxy settings",
+                createNode().apply {
+                    node("official").setCV(
+                        "The proxy of official connecting",
+                        createNode().apply {
+                            node("type").set("direct")
+                        }
+                    )
+                    node("just-example-for-socks").setCV(
+                        "Example for socks proxy",
+                        createNode().apply {
+                            node("type").set("socks")
+                            node("host").set("localhost")
+                            node("port").set(1080)
+                        }
+                    )
+                    node("just-example-for-socks-with-authentication").setCV(
+                        "Example for socks proxy with authentication",
+                        createNode().apply {
+                            node("type").set("socks")
+                            node("host").set("localhost")
+                            node("port").set(1080)
+                            node("username").set("username")
+                            node("password").set("password")
+                        }
+                    )
+                    node("yggdrasil").setCV(
+                        "The proxy of yggdrasil connecting",
+                        createNode().apply {
+                            node("type").set("direct")
+                        }
+                    )
+                    node("just-example-for-http").set(createNode().apply {
+                        node("type").set("http")
+                        node("url").set("http://localhost/proxy")
+                    })
 
-                    }
+                }
             )
             node("CDN").setCV("CDN settings", createNode().apply {
                 node("enable").set(false)
@@ -312,7 +315,7 @@ object YggdrasilOfficialProxy {
         val server = embeddedServer(Netty, environment = applicationEngineEnvironment {
             parentCoroutineContext = dispatcher
             this.log = WrappedLogger
-            WrappedLogger.trace("Verbose enabled.")
+            WrappedLogger.warn("Verbose enabled.")
 
             module {
                 install(DefaultHeaders)
@@ -371,7 +374,7 @@ object YggdrasilOfficialProxy {
                                     }.toString().toByteArray(Charsets.UTF_8), contentType = contentType)
                                 }
                             }.getOrElse {
-                                WrappedLogger.trace(null, t = it)
+                                WrappedLogger.warn(null, t = it)
                                 "[]"
                             }.let { JsonParser.parseString(it).asJsonArray }
                         }
@@ -379,14 +382,14 @@ object YggdrasilOfficialProxy {
                             runCatching<String> {
                                 if (sendToYggdrasil.isEmpty()) "[]"
                                 else yggdrasilClient.post(
-                                        "$baseAPI/api/profiles/minecraft"
+                                    "$baseAPI/api/profiles/minecraft"
                                 ) {
                                     body = ByteArrayContent(JsonArray().also { array ->
                                         sendToYggdrasil.forEach { array.add(it) }
                                     }.toString().toByteArray(Charsets.UTF_8), contentType = contentType)
                                 }
                             }.getOrElse {
-                                WrappedLogger.trace(null, t = it)
+                                WrappedLogger.warn(null, t = it)
                                 "[]"
                             }.let { JsonParser.parseString(it).asJsonArray }
                         }
@@ -430,18 +433,18 @@ object YggdrasilOfficialProxy {
                                 })
                             }
                         }
-                        this.call.respondText(response.toString(), ContentType("application", "json"), HttpStatusCode.OK)
+                        this.call.respondText(
+                            response.toString(),
+                            ContentType("application", "json"),
+                            HttpStatusCode.OK
+                        )
                     }
                     @ContextDsl
                     fun getCatching(path: String, body: PipelineInterceptor<Unit, ApplicationCall>): Route = get(path) {
                         runCatching {
                             body(it)
                         }.onFailure { exception ->
-                            if (WrappedLogger.traceEnabled) {
-                                WrappedLogger.trace(null, t = exception)
-                            } else {
-                                WrappedLogger.warn("A exception in reading network.")
-                            }
+                            WrappedLogger.warn(null, t = exception)
                         }
                     }
 
@@ -450,77 +453,74 @@ object YggdrasilOfficialProxy {
                         runCatching {
                             body(it)
                         }.onFailure { exception ->
-                            if (WrappedLogger.traceEnabled) {
-                                WrappedLogger.trace(null, t = exception)
-                            } else {
-                                WrappedLogger.warn("A exception in reading network.")
-                            }
+                            WrappedLogger.warn(null, t = exception)
                         }
                     }
                     getCatching("/sessionserver/session/minecraft/hasJoined") get@{
                         val user = this.call.parameters["username"]
                         val server = this.call.parameters["serverId"]
                         val ip = this.call.parameters["ip"]
-                        WrappedLogger.trace("I - hasJoined <- user=$user, server=$server")
+                        WrappedLogger.warn("I - hasJoined <- user=$user, server=$server")
                         if (user == null || server == null) {
-                            WrappedLogger.trace("No server come.")
+                            WrappedLogger.warn("No server come.")
                             this.call.respond(HttpStatusCode.NoContent)
                             return@get
                         }
                         val officialDeferred = async(Dispatchers.IO) {
                             runCatching {
-                                WrappedLogger.trace("Connecting to official...")
+                                WrappedLogger.warn("Connecting to official...")
                                 val response = officialClient.get<HttpResponse>(
-                                        url = URLBuilder().apply {
-                                            takeFrom(hasJoin)
-                                            parameters.append("username", user)
-                                            parameters.append("serverId", server)
-                                            if (ip != null) {
-                                                parameters.append("ip", ip)
-                                            }
-                                        }.build()
+                                    url = URLBuilder().apply {
+                                        takeFrom(hasJoin)
+                                        parameters.append("username", user)
+                                        parameters.append("serverId", server)
+                                        if (ip != null) {
+                                            parameters.append("ip", ip)
+                                        }
+                                    }.build()
                                 )
                                 if (response.status.value == 200) {
-                                    WrappedLogger.trace("Official Responsed...")
+                                    WrappedLogger.warn("Official Responsed...")
                                     return@async response
                                 }
-                            }.onFailure { WrappedLogger.trace("Official NetWork error", t = it) }
+                            }.onFailure { WrappedLogger.warn("Official NetWork error", t = it) }
                             return@async null
                         }
                         val yggdrasilDeferred = async(Dispatchers.IO) {
-                            WrappedLogger.trace("Connecting to Yggdrasil...")
+                            WrappedLogger.warn("Connecting to Yggdrasil...")
                             runCatching {
                                 val response = yggdrasilClient.get<HttpResponse>(
-                                        url = URLBuilder().apply {
-                                            takeFrom("$baseAPI/sessionserver/session/minecraft/hasJoined")
-                                            parameters.append("username", user)
-                                            parameters.append("serverId", server)
-                                            if (ip != null) {
-                                                parameters.append("ip", ip)
-                                            }
-                                        }.build().also {
-                                            WrappedLogger.trace("Trying to connect $it")
+                                    url = URLBuilder().apply {
+                                        takeFrom("$baseAPI/sessionserver/session/minecraft/hasJoined")
+                                        parameters.append("username", user)
+                                        parameters.append("serverId", server)
+                                        if (ip != null) {
+                                            parameters.append("ip", ip)
                                         }
+                                    }.build().also {
+                                        WrappedLogger.warn("Trying to connect $it")
+                                    }
                                 )
                                 if (response.status.value == 200) {
-                                    WrappedLogger.trace("Yggdrasil Responsed...")
+                                    WrappedLogger.warn("Yggdrasil Responsed...")
                                     return@async response
                                 }
-                            }.onFailure { WrappedLogger.trace("Yggdrasil", t = it) }
+                            }.onFailure { WrappedLogger.warn("Yggdrasil", t = it) }
                             return@async null
                         }
                         val officialResponse = officialDeferred.await()
                         val yggdrasilResponse = yggdrasilDeferred.await()
-                        val resp = if (officialResponse ?: yggdrasilResponse == null || (officialResponse != null && yggdrasilResponse != null)) {
-                            // Failed...
-                            WrappedLogger.trace("No server compiled......")
-                            NoContextResponse
-                        } else {
-                            officialResponse ?: yggdrasilResponse!!
-                        }
+                        val resp =
+                            if (officialResponse ?: yggdrasilResponse == null || (officialResponse != null && yggdrasilResponse != null)) {
+                                // Failed...
+                                WrappedLogger.warn("No server compiled......")
+                                NoContextResponse
+                            } else {
+                                officialResponse ?: yggdrasilResponse!!
+                            }
                         val resp0 = patch(resp, resp === officialResponse)
 
-                        WrappedLogger.trace("You, and Me.... Finished.")
+                        WrappedLogger.warn("You, and Me.... Finished.")
                         this.call.respond(object : OutgoingContent.ByteArrayContent() {
                             override fun bytes(): ByteArray {
                                 return resp0
@@ -534,7 +534,7 @@ object YggdrasilOfficialProxy {
                     }
                     getCatching {
                         val uri = this.call.request.origin.uri
-                        WrappedLogger.trace("DRX: $uri")
+                        WrappedLogger.warn("DRX: $uri")
                         val resp: HttpResponse = yggdrasilClient.get("$baseAPI$uri")
                         this.call.respond(object : OutgoingContent.ReadChannelContent() {
                             override fun readFrom(): ByteReadChannel {
@@ -563,7 +563,7 @@ object YggdrasilOfficialProxy {
                     else -> NioEventLoopGroup(3, threadFactory)
                 }
                 this.group(g(), g())
-                        .channel(getChannelClass().java)
+                    .channel(getChannelClass().java)
             }
         }
         try {
@@ -584,8 +584,9 @@ object YggdrasilOfficialProxy {
         instrumentation.appendToSystemClassLoaderSearch(jar)
         val `class` = jar.manifest.mainAttributes.getValue("Premain-Class")
         val bootstrap = Class.forName(`class`)
-        bootstrap.getMethod("premain", java.lang.String::class.java,
-                Instrumentation::class.java
+        bootstrap.getMethod(
+            "premain", java.lang.String::class.java,
+            Instrumentation::class.java
         ).invoke(null, "http://localhost:$port_C", instrumentation)
     }
 }
